@@ -1,10 +1,11 @@
-import 'package:NTUFoodMap/main.dart';
-import 'package:NTUFoodMap/utils.dart';
+import 'package:ntu_food_map/main.dart';
+import 'package:ntu_food_map/components/utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:ntu_food_map/containers/forgot_password_page.dart';
 
 class LoginWidget extends StatefulWidget {
   final VoidCallback onClickedSignUp;
@@ -118,6 +119,25 @@ class _LoginWidgetState extends State<LoginWidget> {
                       ),
                     ),
                   ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            // Reset password
+            GestureDetector(
+              child: const Text(
+                'Forgot password?',
+                style: TextStyle(
+                  decoration: TextDecoration.underline,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blueAccent,
+                ),
+              ),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const ForgetPasswordPage(),
                 ),
               ),
             ),

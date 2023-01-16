@@ -1,12 +1,11 @@
-import 'package:NTUFoodMap/main.dart';
+import 'package:ntu_food_map/main.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-import 'utils.dart';
+import 'package:ntu_food_map/components/utils.dart';
 
 class SignUpWidget extends StatefulWidget {
   final VoidCallback onClickedSignIn;

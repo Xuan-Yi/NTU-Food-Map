@@ -2,9 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart'; // Fire base Auth
 import 'package:firebase_core/firebase_core.dart'; // Firebase Core
 // import 'package:cloud_firestore/cloud_firestore.dart'; // Firebase Database
 
-import 'home_page.dart';
-import 'auth_page.dart';
-import 'utils.dart';
+import 'containers/home_page.dart';
+import 'containers/auth_page.dart';
+import 'components/utils.dart';
+import 'containers/verify_email_page.dart';
 import 'package:flutter/material.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -35,7 +36,7 @@ class MainApp extends StatelessWidget {
             } else if (snapshot.hasError) {
               return const Center(child: Text('Something went wrong!'));
             } else if (snapshot.hasData) {
-              return const HomePage();
+              return const VerifyEmailPage();
             } else {
               return const AuthPage();
             }

@@ -15,6 +15,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home Page'),
+        backgroundColor: Colors.green,
       ),
       body: Padding(
         padding: const EdgeInsets.all(32),
@@ -34,6 +35,7 @@ class _HomePageState extends State<HomePage> {
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size.fromHeight(50),
+                backgroundColor: Colors.green,
               ),
               icon: const Icon(Icons.arrow_back, size: 32),
               label: const Text(
