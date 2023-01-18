@@ -1,8 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart'; // Fire base Auth
 import 'package:firebase_core/firebase_core.dart'; // Firebase Core
-// import 'package:cloud_firestore/cloud_firestore.dart'; // Firebase Database
-
-import 'containers/home_page.dart';
 import 'containers/auth_page.dart';
 import 'components/utils.dart';
 import 'containers/verify_email_page.dart';
@@ -20,7 +17,7 @@ Future main() async {
       navigatorKey: navigatorKey,
       home: const MainApp(),
     ),
-  ); // calls stateless obj that open's login page
+  );
 }
 
 class MainApp extends StatelessWidget {
