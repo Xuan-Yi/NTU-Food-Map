@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:ntu_food_map/main.dart'; // Fire base Auth
 
 class NavigationDrawer extends StatelessWidget {
   const NavigationDrawer({Key? key}) : super(key: key);
@@ -38,6 +37,26 @@ class NavigationDrawer extends StatelessWidget {
               onTap: () => {
                 Navigator.pop(context),
                 Navigator.pushNamed(context, '/map'),
+              },
+            ),
+            const Divider(color: Colors.black12),
+            // Recommended Food
+            ListTile(
+              leading: const Icon(Icons.restaurant),
+              title: const Text('Recommend'),
+              onTap: () => {
+                Navigator.pop(context),
+                Navigator.pushNamed(context, '/recommend'),
+              },
+            ),
+            const Divider(color: Colors.black12),
+            // Favorites
+            ListTile(
+              leading: const Icon(Icons.thumb_up_alt),
+              title: const Text('My Favorites'),
+              onTap: () => {
+                Navigator.pop(context),
+                Navigator.pushNamed(context, '/favorite'),
               },
             ),
             const Divider(color: Colors.black12),

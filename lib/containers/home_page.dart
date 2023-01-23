@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'search_page.dart';
 import 'map_page.dart';
 import 'timetable_page.dart';
 
@@ -16,6 +17,9 @@ class _HomePageState extends State<HomePage> {
         routes: {
           '/map': (context) => const MapPage(),
           '/timetable': (context) => const TimetablePage(),
+          '/searchpage': (context) => const SearchPage(),
+          // '/recommend': (context) => ,
+          // '/favorite':(context) => ,
         },
       );
 }

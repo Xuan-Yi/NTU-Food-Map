@@ -13,6 +13,7 @@ Future main() async {
 
   runApp(
     MaterialApp(
+      debugShowCheckedModeBanner: false,
       scaffoldMessengerKey: Utils.messengerKey,
       navigatorKey: navigatorKey,
       home: const MainApp(),
