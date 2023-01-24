@@ -28,7 +28,7 @@ class NavigationDrawer extends StatelessWidget {
   Widget buildItems(BuildContext context) => Container(
         padding: const EdgeInsets.all(24),
         child: Wrap(
-          runSpacing: 16,
+          runSpacing: 12,
           children: [
             // Map Button
             ListTile(
@@ -67,6 +67,16 @@ class NavigationDrawer extends StatelessWidget {
               onTap: () => {
                 Navigator.pop(context),
                 Navigator.pushNamed(context, '/timetable'),
+              },
+            ),
+            const Divider(color: Colors.black12),
+            // Contribute & Edit
+            ListTile(
+              leading: const Icon(Icons.groups),
+              title: const Text('Contribute & Edit'),
+              onTap: () => {
+                Navigator.pop(context),
+                Navigator.pushNamed(context, '/contribute'),
               },
             ),
             const Divider(color: Colors.black12),

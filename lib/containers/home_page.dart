@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'contributor_edit_page.dart';
 import 'search_page.dart';
 import 'map_page.dart';
 import 'timetable_page.dart';
@@ -13,13 +14,14 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) => MaterialApp(
         debugShowCheckedModeBanner: false,
-        initialRoute: '/map',
+        initialRoute: '/contribute',
         routes: {
           '/map': (context) => const MapPage(),
           '/timetable': (context) => const TimetablePage(),
           '/searchpage': (context) => const SearchPage(),
           // '/recommend': (context) => ,
           // '/favorite':(context) => ,
+          '/contribute': (context) => const ContributeAndEditPage(),
         },
       );
 }

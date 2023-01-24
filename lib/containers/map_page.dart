@@ -216,7 +216,6 @@ class _MapPageState extends State<MapPage> {
                     userAgentPackageName: 'com.example.app',
                   ),
                   MarkerLayer(
-                    // rotate: true,
                     markers: [
                           // Current location
                           Marker(
