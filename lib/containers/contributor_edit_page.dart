@@ -41,54 +41,61 @@ class _ContributeAndEditPageState extends State<ContributeAndEditPage> {
           ],
         ),
       ),
-      drawer: const NavigationDrawer(),
-      body: Center(
-        child: Column(
-          children: [
-            ButtonBar(
-              buttonPadding: const EdgeInsets.symmetric(horizontal: 16),
-              alignment: MainAxisAlignment.start,
-              children: [
-                const Text(
-                  'I am',
-                  style: TextStyle(fontSize: 16),
-                ),
-                ElevatedButton.icon(
-                  icon: const Icon(Icons.storefront),
-                  onPressed: () {
-                    if (_isOwner) {
-                      // can edit
-                    } else {
-                      // apply for edit permissions and upload related proofs
-                    }
-                  },
-                  label: const Text('Owner'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _isOwner ? Colors.green : Colors.grey,
-                    shadowColor: Colors.orange,
+      drawer: const MyNavigationDrawer(),
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              ButtonBar(
+                alignment: MainAxisAlignment.start,
+                buttonPadding: const EdgeInsets.symmetric(horizontal: 16),
+                children: [
+                  const Text(
+                    'I am',
+                    style: TextStyle(fontSize: 16),
                   ),
-                ),
-                ElevatedButton.icon(
-                  icon: const Icon(Icons.group),
-                  onPressed: () {},
-                  label: const Text('Contributor'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    shadowColor: Colors.orange,
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.storefront),
+                    onPressed: () {
+                      if (_isOwner) {
+                        // can edit
+                      } else {
+                        // apply for edit permissions and upload related proofs
+                      }
+                    },
+                    label: const Text('Owner'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _isOwner ? Colors.green : Colors.grey,
+                      shadowColor: Colors.orange,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Divider(
-                thickness: .5,
-                height: .5,
-                color: Colors.grey,
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.group),
+                    onPressed: () {},
+                    label: const Text('Contributor'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      shadowColor: Colors.orange,
+                    ),
+                  ),
+                ],
               ),
-            ),
-            const ContributeEditWidget(),
-          ],
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Divider(
+                  thickness: .5,
+                  height: .5,
+                  color: Colors.grey,
+                ),
+              ),
+              const ContributeEditWidget(),
+            ],
+          ),
         ),
       ),
     );

@@ -1,11 +1,15 @@
-import 'package:flutter_map/flutter_map.dart';
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:ntu_food_map/components/navigation_drawer.dart';
 import 'package:location/location.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
+import 'utils.dart';
 
 class ContributeEditWidget extends StatefulWidget {
   const ContributeEditWidget({super.key});
@@ -15,10 +19,83 @@ class ContributeEditWidget extends StatefulWidget {
 }
 
 class _ContributeEditWidgetState extends State<ContributeEditWidget> {
-  String dropdownValue = "公館";
   late MapController _mapController;
   late LocationData currentLocation;
   bool _centerIsCurrentLocation = true;
+  final ImagePicker _picker = ImagePicker();
+  List<File>? imgFiles = [];
+  static const List<Map<String, String>> tags = [
+    // Service options
+    {'category': 'Service options', 'feature': 'Dine-in'},
+    {'category': 'Service options', 'feature': 'Takeaway'},
+    {'category': 'Service options', 'feature': 'Delivery'},
+    {'category': 'Service options', 'feature': 'foodpanda'},
+    {'category': 'Service options', 'feature': 'Uber Eats'},
+    {'category': 'Service options', 'feature': 'LaLaMove'},
+    // Highlights
+    {'category': 'Highlights', 'feature': 'Fast service'},
+    {'category': 'Highlights', 'feature': 'Fireplace'},
+    {'category': 'Highlights', 'feature': 'Great for studing'},
+    {'category': 'Highlights', 'feature': 'Great for dine together'},
+    {'category': 'Highlights', 'feature': 'Nice service'},
+    {'category': 'Highlights', 'feature': 'Muslim Friendly Restaurant'},
+    {'category': 'Highlights', 'feature': 'Free drinks'},
+    {'category': 'Highlights', 'feature': 'Free soups'},
+    {'category': 'Highlights', 'feature': 'Bar on site'},
+    {'category': 'Highlights', 'feature': 'Toilets'},
+    {'category': 'Highlights', 'feature': 'Special offers(優惠)'},
+    // Accessibility
+    {'category': 'Accessibility', 'feature': 'Wheelchair-accessible car park'},
+    {'category': 'Accessibility', 'feature': 'Wheelchair-accessible entrance'},
+    {'category': 'Accessibility', 'feature': 'Wheelchair-accessible lift'},
+    {'category': 'Accessibility', 'feature': 'Wheelchair-accessible seating'},
+    {'category': 'Accessibility', 'feature': 'Wheelchair-accessible toilet'},
+    // Offerings
+    {'category': 'Offerings', 'feature': 'Vegetarian options'},
+    {'category': 'Offerings', 'feature': 'Ramen'},
+    {'category': 'Offerings', 'feature': 'Japanese meals'},
+    {'category': 'Offerings', 'feature': 'Ti-styled Japanese food'},
+    {'category': 'Offerings', 'feature': 'Italian meals'},
+    {'category': 'Offerings', 'feature': 'Ti-styled Italian food'},
+    {'category': 'Offerings', 'feature': 'Rice dishes'},
+    {'category': 'Offerings', 'feature': 'Noodle dishes'},
+    {'category': 'Offerings', 'feature': 'Cafeteria dishes(自助餐)'},
+    {'category': 'Offerings', 'feature': 'Chinese breakfast foods(中式早餐)'},
+    {'category': 'Offerings', 'feature': 'Fast foods'},
+    {'category': 'Offerings', 'feature': 'Beer'},
+    {'category': 'Offerings', 'feature': 'Alchohol'},
+    {'category': 'Offerings', 'feature': 'Wine'},
+    {'category': 'Offerings', 'feature': 'Cocktail'},
+    {'category': 'Offerings', 'feature': 'Coffee'},
+    {'category': 'Offerings', 'feature': 'Drinks'},
+    {'category': 'Offerings', 'feature': 'Water'},
+    // Dining options
+    {'category': 'Dining options', 'feature': 'Breakfast'},
+    {'category': 'Dining options', 'feature': 'Brunch'},
+    {'category': 'Dining options', 'feature': 'Lunch'},
+    {'category': 'Dining options', 'feature': 'Dinner'},
+    {'category': 'Dining options', 'feature': 'Afternoon tea'},
+    {'category': 'Dining options', 'feature': 'Late-night supper(宵夜)'},
+    {'category': 'Dining options', 'feature': 'Dessert'},
+    // Crowd
+    {'category': 'Crowd', 'feature': 'University students'},
+    {'category': 'Crowd', 'feature': 'University employees & teachers'},
+    {'category': 'Crowd', 'feature': 'Groups'},
+    {'category': 'Crowd', 'feature': 'Elders'},
+    {'category': 'Crowd', 'feature': 'Family'},
+    // Payments
+    {'category': 'Payments', 'feature': 'Cash only'},
+    {'category': 'Payments', 'feature': 'Credit card'},
+    {'category': 'Payments', 'feature': 'EasyCard(悠遊卡)'},
+    {'category': 'Payments', 'feature': 'iPASS Card(一卡通)'},
+    {'category': 'Payments', 'feature': 'LINE Pay'},
+    {'category': 'Payments', 'feature': 'Apple Pay'},
+    {'category': 'Payments', 'feature': 'SAMSUNG Pay'},
+    {'category': 'Payments', 'feature': 'Google Pay'},
+    {'category': 'Payments', 'feature': '街口支付'},
+    {'category': 'Payments', 'feature': '悠游付'},
+  ];
+  List<bool> tagChosen = List.filled(tags.length, true);
 
   @override
   void initState() {
@@ -51,8 +128,18 @@ class _ContributeEditWidgetState extends State<ContributeEditWidget> {
     return await location.getLocation();
   }
 
+  // Get image from gallery
+  Future<void> _getFromGallery() async {
+    List<XFile>? pickedFiles = await _picker.pickMultiImage();
+    if (pickedFiles.isNotEmpty) {
+      setState(() {
+        imgFiles = pickedFiles.map((pf) => File(pf.path)).toList();
+      });
+    }
+  }
+
   @override
-  Widget build(context) {
+  Widget build(BuildContext context) {
     return FutureBuilder<LocationData?>(
       future: _currentLocation(),
       builder: (context, AsyncSnapshot<dynamic> snapshot) {
@@ -61,8 +148,148 @@ class _ContributeEditWidgetState extends State<ContributeEditWidget> {
           return Center(
             child: Column(
               children: [
+                const SizedBox(height: 10),
+                // Pick pictures
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  child: Row(
+                    children: [
+                      // Picture picker button
+                      SizedBox(
+                        height: 60,
+                        width: 60,
+                        child: Tooltip(
+                          message: "Pick pictures",
+                          padding: const EdgeInsets.all(8),
+                          verticalOffset: 36,
+                          height: 24,
+                          textStyle: const TextStyle(
+                              fontSize: 15, color: Colors.black),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.grey,
+                                blurRadius: 6,
+                              )
+                            ],
+                          ),
+                          waitDuration: const Duration(seconds: 1),
+                          showDuration: const Duration(seconds: 2),
+                          child: ElevatedButton(
+                            onPressed: () => _getFromGallery(),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey[200],
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20)),
+                            ),
+                            child: const Icon(Icons.add_a_photo,
+                                color: Colors.grey),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      // Picture previews
+                      Expanded(
+                        child: SizedBox(
+                          height: 60,
+                          child: ListView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            itemCount: imgFiles!.length,
+                            itemBuilder: (context, int index) {
+                              return TextButton(
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        backgroundColor: const Color.fromARGB(
+                                            0, 255, 255, 255),
+                                        content: Stack(
+                                          children: [
+                                            // preview image
+                                            Center(
+                                              child: Container(
+                                                alignment: Alignment.center,
+                                                padding:
+                                                    const EdgeInsets.all(16),
+                                                child: SizedBox.fromSize(
+                                                  size: Size.infinite,
+                                                  child: Image.file(
+                                                      imgFiles![index],
+                                                      filterQuality:
+                                                          FilterQuality.high,
+                                                      fit: BoxFit.contain),
+                                                ),
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                                onTap: () =>
+                                                    Navigator.pop(context)),
+                                            // delete image button
+                                            Align(
+                                              alignment: Alignment.bottomRight,
+                                              child: MaterialButton(
+                                                onPressed: () {
+                                                  setState(() => imgFiles!
+                                                      .remove(
+                                                          imgFiles![index]));
+                                                  Navigator.pop(context);
+                                                },
+                                                color: Colors.white,
+                                                splashColor: Colors.greenAccent,
+                                                shape: const CircleBorder(),
+                                                padding:
+                                                    const EdgeInsets.all(18),
+                                                child: const Icon(
+                                                  Icons.delete,
+                                                  size: 24,
+                                                  color: Colors.pinkAccent,
+                                                  shadows: [
+                                                    BoxShadow(
+                                                      color: Colors.grey,
+                                                      blurRadius: 16,
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        insetPadding: EdgeInsets.zero,
+                                        contentPadding: EdgeInsets.zero,
+                                        clipBehavior:
+                                            Clip.antiAliasWithSaveLayer,
+                                      );
+                                    },
+                                  );
+                                },
+                                style: TextButton.styleFrom(
+                                  minimumSize: Size.zero,
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 4),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: SizedBox.fromSize(
+                                    size: const Size(60, 60),
+                                    child: Image.file(imgFiles![index],
+                                        filterQuality: FilterQuality.low,
+                                        fit: BoxFit.cover),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
                 // Restaurant name
-                const SizedBox(height: 50),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
                   child: Container(
@@ -145,7 +372,42 @@ class _ContributeEditWidgetState extends State<ContributeEditWidget> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 10),
+                // Tags
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  child: Wrap(
+                    spacing: 4,
+                    runSpacing: 0,
+                    children: tags
+                        .where((t) => tagChosen[tags.indexOf(t)])
+                        .map(
+                          (e) => ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: Size.zero,
+                              backgroundColor: Colors.grey[200],
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 7, vertical: 2.8),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  side: const BorderSide(color: Colors.grey)),
+                            ),
+                            child: Text(
+                              "#${e['feature']}",
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ),
+                const SizedBox(height: 10),
                 // Divider
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25),
@@ -161,7 +423,7 @@ class _ContributeEditWidgetState extends State<ContributeEditWidget> {
                   child: Row(
                     children: [
                       // Button
-                      TextButton(
+                      ElevatedButton(
                         onPressed: () {
                           setState(() => _centerIsCurrentLocation = true);
                           _mapController.moveAndRotate(
@@ -181,7 +443,11 @@ class _ContributeEditWidgetState extends State<ContributeEditWidget> {
                       const SizedBox(width: 10),
                       // Coordinate
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () => Clipboard.setData(ClipboardData(
+                                text:
+                                    "(${currentLocation.latitude!}, ${currentLocation.longitude!})"))
+                            .then((_) => Utils.showSnackBar(
+                                'Coordinate copied to clipboard')),
                         child: Text(
                           '(${currentLocation.latitude!.toStringAsFixed(4)}, ${currentLocation.longitude!.toStringAsFixed(4)})',
                           style: const TextStyle(
@@ -194,9 +460,7 @@ class _ContributeEditWidgetState extends State<ContributeEditWidget> {
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 10),
                 // Coordinate preview on map
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),

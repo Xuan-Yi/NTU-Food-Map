@@ -4,8 +4,9 @@ import 'package:flutter_map/plugin_api.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ntu_food_map/components/navigation_drawer.dart';
 import 'package:location/location.dart';
+import '../components/navigation_drawer.dart';
+import '../containers/search_page.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -115,7 +116,7 @@ class _MapPageState extends State<MapPage> {
                 ],
               ),
             ),
-            drawer: const NavigationDrawer(),
+            drawer: const MyNavigationDrawer(),
             body: Center(
               child: FlutterMap(
                 mapController: _mapController,
@@ -182,7 +183,11 @@ class _MapPageState extends State<MapPage> {
                             child: ElevatedButton(
                               onPressed: () {
                                 Navigator.pop(context);
-                                Navigator.pushNamed(context, '/searchpage');
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const SearchPage()),
+                                );
                               },
                               style: ButtonStyle(
                                 backgroundColor:

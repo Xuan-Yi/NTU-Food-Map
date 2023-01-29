@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:ntu_food_map/components/navigation_drawer.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import '../components/navigation_drawer.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -89,7 +90,7 @@ class _SearchPageState extends State<StatefulWidget> {
             backgroundColor: Colors.green,
           ),
           resizeToAvoidBottomInset: false,
-          drawer: const NavigationDrawer(),
+          drawer: const MyNavigationDrawer(),
           body: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -129,6 +130,14 @@ class _SearchPageState extends State<StatefulWidget> {
                               Navigator.pop(context);
                               Navigator.pushNamed(context, '/map',
                                   arguments: restaurants[index]);
+                              // show restaurant name
+                              Fluttertoast.showToast(
+                                  msg: restaurants[index]['name'].toString(),
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER,
+                                  timeInSecForIosWeb: 1,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
                             },
                             child: Card(
                               key: ValueKey(restaurants[index]['name']),

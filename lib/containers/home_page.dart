@@ -18,7 +18,6 @@ class _HomePageState extends State<HomePage> {
         routes: {
           '/map': (context) => const MapPage(),
           '/timetable': (context) => const TimetablePage(),
-          '/searchpage': (context) => const SearchPage(),
           // '/recommend': (context) => ,
           // '/favorite':(context) => ,
           '/contribute': (context) => const ContributeAndEditPage(),

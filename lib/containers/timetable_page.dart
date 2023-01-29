@@ -100,7 +100,7 @@ class _TimetablePageState extends State<TimetablePage> {
           ],
         ),
       ),
-      drawer: const NavigationDrawer(),
+      drawer: const MyNavigationDrawer(),
       backgroundColor: Colors.grey[700],
       body: Center(
         child: SingleChildScrollView(
