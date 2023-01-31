@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../components/contributor_edit_widget.dart';
 import '../components/navigation_drawer.dart';
+import '../components/owner_edit_widget.dart';
+import '../components/contributor_edit_widget.dart';
 
 class ContributeAndEditPage extends StatefulWidget {
   const ContributeAndEditPage({super.key});
@@ -12,7 +12,7 @@ class ContributeAndEditPage extends StatefulWidget {
 }
 
 class _ContributeAndEditPageState extends State<ContributeAndEditPage> {
-  final bool _isOwner = false; // grab from database later
+  bool atOwnerPage = false;
 
   @override
   Widget build(context) {
@@ -59,29 +59,39 @@ class _ContributeAndEditPageState extends State<ContributeAndEditPage> {
                     'I am',
                     style: TextStyle(fontSize: 16),
                   ),
+                  // Contributor button
                   ElevatedButton.icon(
-                    icon: const Icon(Icons.storefront),
-                    onPressed: () {
-                      if (_isOwner) {
-                        // can edit
-                      } else {
-                        // apply for edit permissions and upload related proofs
-                      }
-                    },
-                    label: const Text('Owner'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: _isOwner ? Colors.green : Colors.grey,
-                      shadowColor: Colors.orange,
+                    icon: Icon(Icons.group,
+                        color: atOwnerPage ? Colors.green : Colors.white),
+                    onPressed: () => setState(() => atOwnerPage = false),
+                    label: Text(
+                      'Contributor',
+                      style: TextStyle(
+                          color: atOwnerPage ? Colors.green : Colors.white),
                     ),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            atOwnerPage ? Colors.white : Colors.green,
+                        shadowColor: Colors.orange,
+                        shape: const RoundedRectangleBorder(
+                            side: BorderSide(width: 1, color: Colors.green))),
                   ),
+                  // Owner button
                   ElevatedButton.icon(
-                    icon: const Icon(Icons.group),
-                    onPressed: () {},
-                    label: const Text('Contributor'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      shadowColor: Colors.orange,
+                    icon: Icon(Icons.storefront,
+                        color: atOwnerPage ? Colors.white : Colors.green),
+                    onPressed: () => setState(() => atOwnerPage = true),
+                    label: Text(
+                      'Owner',
+                      style: TextStyle(
+                          color: atOwnerPage ? Colors.white : Colors.green),
                     ),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            atOwnerPage ? Colors.green : Colors.white,
+                        shadowColor: Colors.orange,
+                        shape: const RoundedRectangleBorder(
+                            side: BorderSide(width: 1, color: Colors.green))),
                   ),
                 ],
               ),
@@ -93,7 +103,9 @@ class _ContributeAndEditPageState extends State<ContributeAndEditPage> {
                   color: Colors.grey,
                 ),
               ),
-              const ContributeEditWidget(),
+              atOwnerPage
+                  ? const OwnerEditWidget()
+                  : const ContributorEditWidget(),
             ],
           ),
         ),
