@@ -4,14 +4,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
-import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
 import 'utils.dart';
 import 'tag_menu.dart';
 import 'picture_picker.dart';
+import 'dish_menu.dart';
 
 class OwnerEditWidget extends StatefulWidget {
   const OwnerEditWidget({super.key});
@@ -21,18 +18,22 @@ class OwnerEditWidget extends StatefulWidget {
 }
 
 class _OwnerEditWidgetState extends State<OwnerEditWidget> {
-  late MapController _mapController;
-  late LocationData currentLocation;
-  bool _centerIsCurrentLocation = true;
+  // Picture picker
   List<File> imgFiles = [];
+  // Tags
   List<bool> tagChosen = List.filled(tags.length, false);
   bool showTags = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _mapController = MapController();
-  }
+  // Dish menu
+  List<Map> dishes = [
+    {'dish': '鍋燒意麵', 'price': 75, 'picture': null},
+    {'dish': '廣東粥', 'price': 65, 'picture': null},
+    {'dish': '美味蟹堡', 'price': 175, 'picture': null},
+    {'dish': 'QQㄋㄟㄋㄟ好喝到咩噗茶', 'price': 45, 'picture': null},
+    {'dish': '飯', 'price': 15, 'picture': null},
+    {'dish': 'Margherita Pizza', 'price': 75, 'picture': null},
+    {'dish': 'ゆばそば', 'price': 50, 'picture': null},
+  ];
+  bool showDishMenu = false;
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +145,22 @@ class _OwnerEditWidgetState extends State<OwnerEditWidget> {
               color: Colors.grey,
               thickness: 1,
             ),
-            // Send application
+            const SizedBox(height: 10), // Dish menu
+            DishMenu(
+              dishes: dishes,
+              showDishMenu: showDishMenu,
+              addDish: (d) => setState(() => dishes.add(d)),
+              removeDish: (idx) => setState(() => dishes.remove(dishes[idx])),
+              setVisible: (visible) => setState(() => showDishMenu = visible),
+              updateDish: (d) =>
+                  setState(() => dishes[d['index']] = d['newdata']),
+            ),
+            // Divider
+            const Divider(
+              color: Colors.grey,
+              thickness: 1,
+            ),
+            // Save change
             const SizedBox(height: 30),
             ElevatedButton.icon(
               onPressed: () {
@@ -164,7 +180,7 @@ class _OwnerEditWidgetState extends State<OwnerEditWidget> {
               ),
               icon: const Icon(Icons.send),
               label: const Text(
-                'Send Change',
+                'Save Change',
                 style: TextStyle(fontSize: 18),
               ),
             ),

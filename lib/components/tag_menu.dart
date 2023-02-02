@@ -184,6 +184,7 @@ class TagMenu extends StatelessWidget {
                     _tagWidgets('Dining options'),
                     _tagWidgets('Crowd'),
                     _tagWidgets('Payments'),
+                    // Close button
                     ElevatedButton(
                       onPressed: () => setVisible(!showTags),
                       style: ElevatedButton.styleFrom(
@@ -198,12 +199,12 @@ class TagMenu extends StatelessWidget {
                         'Hide tags',
                         style: TextStyle(fontSize: 16, color: Colors.green),
                       ),
-                    )
+                    ),
+                    const SizedBox(height: 10),
                   ],
                 )
               : null,
         ),
-        const SizedBox(height: 10),
       ],
     );
   }
