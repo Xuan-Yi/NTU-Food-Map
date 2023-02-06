@@ -77,10 +77,10 @@ packages:
     dependency: transitive
     description:
       name: cross_file
-      sha256: f71079978789bc2fe78d79227f1f8cfe195b31bbd8db2399b0d15a4b96fb843b
+      sha256: "0b0036e8cccbfbe0555fd83c1d31a6f30b77a96b598b35a5d36dd41f718695e9"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.3+2"
+    version: "0.3.3+4"
   crypto:
     dependency: transitive
     description:
@@ -177,6 +177,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  firebase_storage:
+    dependency: "direct main"
+    description:
+      name: firebase_storage
+      sha256: "1801785c8bce9b0b262f5daf36e1a48907620147b8065a25e3ad7ae2e890fc11"
+      url: "https://pub.dev"
+    source: hosted
+    version: "11.0.10"
+  firebase_storage_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_storage_platform_interface
+      sha256: "3abc5b687731b7e221ea2b867ddc40ed2f6bdb510dcc3d6cd5d73b25ad750485"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.26"
+  firebase_storage_web:
+    dependency: transitive
+    description:
+      name: firebase_storage_web
+      sha256: "6ac00cd227fb863fcf3ab67991cbaafcd0993da88f63be552e4e636bb0928a3c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.3.19"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -228,10 +252,10 @@ packages:
     dependency: "direct main"
     description:
       name: google_fonts
-      sha256: "148c716f5929371d335d29c2952119b34842b1a8e5607e37bb9f68f96e88068a"
+      sha256: df5643eabd08d9f09522b67e5af854d0b5478f3c26952ad58147a621aa2cda08
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.1"
+    version: "4.0.2"
   http:
     dependency: transitive
     description:
@@ -529,18 +553,18 @@ packages:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
-      sha256: "66529f3f102c6501a75811e8d931a1908ad9865ea4d3416c40ac05cf62fdcd44"
+      sha256: b3e500b1896d40c8961ab430a94fc22eff8fa1b33af03584e2f0b89371c3fa6a
       url: "https://pub.dev"
     source: hosted
-    version: "20.4.44"
+    version: "20.4.48"
   syncfusion_flutter_maps:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_maps
-      sha256: "99c553c8bc2660c45ca416b2f47913f78d6eebb0e1f6f011dc9d040a51cf9bc4"
+      sha256: "04177e47b9090d64bb014903e312d73533fc7d2c78c46560507319e763348e80"
       url: "https://pub.dev"
     source: hosted
-    version: "20.4.44"
+    version: "20.4.48"
   term_glyph:
     dependency: transitive
     description:
@@ -581,6 +605,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.1"
+  uuid:
+    dependency: "direct main"
+    description:
+      name: uuid
+      sha256: "648e103079f7c64a36dc7d39369cabb358d377078a051d6ae2ad3aa539519313"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.7"
   vector_math:
     dependency: transitive
     description:
@@ -614,5 +646,5 @@ packages:
     source: hosted
     version: "0.2.0+3"
 sdks:
-  dart: ">=2.18.5 <4.0.0"
+  dart: ">=2.18.5 <3.0.0"
   flutter: ">=3.3.0"

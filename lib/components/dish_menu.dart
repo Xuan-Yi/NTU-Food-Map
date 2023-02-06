@@ -3,27 +3,24 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 import 'utils.dart';
 
 // Dish menu
 class DishMenu extends StatefulWidget {
-  final List<Map> dishes;
+  final List<Map<String, dynamic>> dishes;
   final bool showDishMenu;
-  final ValueChanged<Map> addDish;
-  final ValueChanged<int> removeDish;
   final ValueChanged<bool> setVisible;
-  final ValueChanged<Map> updateDish;
+  final ValueChanged<Map<String, dynamic>> updateDish;
 
-  const DishMenu(
-      {Key? key,
-      BuildContext? context,
-      required this.dishes,
-      required this.showDishMenu,
-      required this.addDish,
-      required this.removeDish,
-      required this.setVisible,
-      required this.updateDish})
-      : super(key: key);
+  const DishMenu({
+    Key? key,
+    BuildContext? context,
+    required this.dishes,
+    required this.showDishMenu,
+    required this.setVisible,
+    required this.updateDish,
+  }) : super(key: key);
 
   @override
   State createState() => _DishMenuState();
@@ -76,18 +73,21 @@ class _DishMenuState extends State<DishMenu> {
                                         context: context,
                                         builder: (context) {
                                           return EditWindow(
-                                            index: -1,
-                                            dish: const {
-                                              'dish': '',
+                                            dish: {
+                                              'name': '',
                                               'price': 0,
-                                              'picture': null
+                                              'category': '',
+                                              'image path': null,
+                                              'image url': null,
+                                              'id': 'temp_${const Uuid().v4()}',
+                                              'action': 'create',
+                                              'picture changed': false,
+                                              'picture': null,
                                             },
-                                            updateDish: (newDish) => setState(
-                                              () {
-                                                widget.addDish(newDish);
-                                                Navigator.pop(context);
-                                              },
-                                            ),
+                                            updateDish: (d) {
+                                              widget.updateDish(d);
+                                              Navigator.pop(context);
+                                            },
                                           );
                                         },
                                       ),
@@ -117,6 +117,7 @@ class _DishMenuState extends State<DishMenu> {
                             )
                           ] +
                           widget.dishes
+                              .where((e) => e['action'] != 'delete')
                               .map(
                                 (e) => ElevatedButton(
                                   onPressed: () => showDialog(
@@ -129,8 +130,10 @@ class _DishMenuState extends State<DishMenu> {
                                       actions: [
                                         TextButton(
                                           onPressed: () {
-                                            setState(() => widget.removeDish(
-                                                widget.dishes.indexOf(e)));
+                                            Map<String, dynamic> newData =
+                                                Map<String, dynamic>.from(e);
+                                            newData['action'] = 'delete';
+                                            widget.updateDish(newData);
                                             Navigator.pop(context);
                                           },
                                           child: const Text('Confirm',
@@ -151,27 +154,48 @@ class _DishMenuState extends State<DishMenu> {
                                     alignment: Alignment.center,
                                     backgroundColor: Colors.white,
                                     foregroundColor: Colors.green,
-                                    fixedSize: const Size(150, 200),
+                                    fixedSize: const Size(150, 220),
                                   ),
                                   child: Column(
                                     children: [
+                                      // Category
+                                      Container(
+                                        decoration: const BoxDecoration(
+                                            borderRadius: BorderRadius.vertical(
+                                                bottom: Radius.circular(8)),
+                                            color: Colors.green),
+                                        padding: const EdgeInsets.all(4),
+                                        child: SizedBox.fromSize(
+                                          size: const Size.fromHeight(18),
+                                          child: Align(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              '${e['category']}',
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                       // Dish picture
                                       Padding(
                                         padding: const EdgeInsets.all(4),
                                         child: SizedBox(
                                           width: 120,
                                           height: 120,
-                                          child: e['picture'] == null
-                                              ? const Icon(
-                                                  Icons
-                                                      .image_not_supported_outlined,
-                                                  color: Colors.grey,
-                                                  size: 78)
-                                              : Image.file(e['picture'],
-                                                  filterQuality:
-                                                      FilterQuality.medium,
-                                                  fit: BoxFit
-                                                      .contain), // load image later
+                                          child: e['picture changed']
+                                              ? Image.file(e['picture'])
+                                              : e['image path'] == null
+                                                  ? const Icon(
+                                                      Icons
+                                                          .image_not_supported_outlined,
+                                                      color: Colors.grey,
+                                                      size: 78)
+                                                  : Image.network(
+                                                      e['image url'],
+                                                      filterQuality:
+                                                          FilterQuality.medium,
+                                                      fit: BoxFit.contain),
                                         ),
                                       ),
                                       // Dish name
@@ -200,7 +224,7 @@ class _DishMenuState extends State<DishMenu> {
                                         child: Align(
                                           alignment: Alignment.topLeft,
                                           child: Text(
-                                            '${e['dish']}',
+                                            '${e['name']}',
                                             overflow: TextOverflow.ellipsis,
                                             style: const TextStyle(
                                                 fontSize: 16,
@@ -238,17 +262,9 @@ class _DishMenuState extends State<DishMenu> {
                                                   context: context,
                                                   builder: (context) {
                                                     return EditWindow(
-                                                      index: widget.dishes
-                                                          .indexOf(e),
                                                       dish: e,
-                                                      updateDish: (newDish) =>
-                                                          setState(() {
-                                                        widget.updateDish({
-                                                          'newdata': newDish,
-                                                          'index': widget.dishes
-                                                              .indexOf(e)
-                                                        });
-                                                      }),
+                                                      updateDish: (d) =>
+                                                          widget.updateDish(d),
                                                     );
                                                   },
                                                 ),
@@ -303,13 +319,11 @@ class _DishMenuState extends State<DishMenu> {
 
 // Pop-up edit window
 class EditWindow extends StatefulWidget {
-  final int index; // If index ==-1, add dish
-  final Map dish; // {'dish': <String>, 'price': <int>, 'image': <File>}
-  final ValueChanged<Map> updateDish;
+  final Map<String, dynamic> dish;
+  final ValueChanged<Map<String, dynamic>> updateDish; // send new dish back
 
   const EditWindow({
     Key? key,
-    required this.index,
     required this.dish,
     required this.updateDish,
   }) : super(key: key);
@@ -319,19 +333,21 @@ class EditWindow extends StatefulWidget {
 }
 
 class _EditWindowState extends State<EditWindow> {
+  late Map<String, dynamic> newDish;
   // Image picker
   final ImagePicker _picker = ImagePicker();
-  File imgFile = File('');
   // Textfields
   TextEditingController nameController = TextEditingController();
+  TextEditingController categoryController = TextEditingController();
   TextEditingController priceController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
-    imgFile = widget.dish['picture'] ?? File(''); // imgFile is nullable
-    nameController.text = widget.dish['dish'] ?? '';
+    newDish = Map<String, dynamic>.from(widget.dish);
+    nameController.text = widget.dish['name'] ?? '';
     priceController.text = widget.dish['price'].toString();
+    categoryController.text = widget.dish['category'] ?? '';
     super.initState();
   }
 
@@ -339,6 +355,7 @@ class _EditWindowState extends State<EditWindow> {
   void dispose() {
     nameController.dispose();
     priceController.dispose();
+    categoryController.dispose();
     super.dispose();
   }
 
@@ -354,13 +371,17 @@ class _EditWindowState extends State<EditWindow> {
   Future<void> _getFromGallery() async {
     XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
-      setState(() => imgFile = File(pickedFile.path));
+      setState(() {
+        newDish.update('picture', (value) => File(pickedFile.path));
+        newDish.update('picture changed', (value) => true);
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      scrollable: true,
       content: Stack(
         children: [
           Positioned(
@@ -391,12 +412,14 @@ class _EditWindowState extends State<EditWindow> {
                     child: SizedBox(
                       width: 120,
                       height: 120,
-                      child: imgFile.path.isEmpty
-                          ? const Icon(Icons.image_not_supported_outlined,
-                              color: Colors.grey, size: 78)
-                          : Image.file(imgFile,
-                              filterQuality: FilterQuality.medium,
-                              fit: BoxFit.contain),
+                      child: newDish['picture changed']
+                          ? Image.file(newDish['picture'])
+                          : newDish['image path'] != null
+                              ? Image.network(newDish['image url'],
+                                  filterQuality: FilterQuality.medium,
+                                  fit: BoxFit.contain)
+                              : const Icon(Icons.image_not_supported_outlined,
+                                  color: Colors.grey, size: 78),
                     ),
                   ),
                 ),
@@ -418,6 +441,19 @@ class _EditWindowState extends State<EditWindow> {
                         labelText: 'Dish',
                         hintStyle: TextStyle(color: Colors.grey),
                         hintText: 'Enter dish name'),
+                  ),
+                ),
+                // Change dish category
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    controller: categoryController,
+                    style: const TextStyle(color: Colors.black),
+                    decoration: const InputDecoration(
+                        labelStyle: TextStyle(color: Colors.green),
+                        labelText: 'Category',
+                        hintStyle: TextStyle(color: Colors.grey),
+                        hintText: 'Enter dish category'),
                   ),
                 ),
                 // Change price
@@ -449,11 +485,18 @@ class _EditWindowState extends State<EditWindow> {
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
                         Navigator.pop(context);
-                        widget.updateDish({
-                          'dish': nameController.text,
-                          'price': int.parse(priceController.text.trim()),
-                          'picture': imgFile.path.isNotEmpty ? imgFile : null,
+                        // Record updates
+                        setState(() {
+                          newDish['name'] = nameController.text;
+                          newDish['price'] =
+                              int.parse(priceController.text.trim());
+                          newDish['category'] = categoryController.text;
+                          newDish['action'] = newDish['id'].contains('temp_')
+                              ? 'create'
+                              : 'update';
                         });
+
+                        widget.updateDish(newDish);
                         Utils.showSnackBar('Changes are saved!');
                       }
                     },

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'contributor_edit_page.dart';
+import 'contributor_and_owner_edit_page.dart';
 import 'map_page.dart';
 import 'timetable_page.dart';
 

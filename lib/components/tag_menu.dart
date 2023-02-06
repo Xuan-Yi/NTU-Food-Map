@@ -35,6 +35,7 @@ const List<Map<String, String>> tags = [
   {'category': 'Offerings', 'feature': 'Italian meals'},
   {'category': 'Offerings', 'feature': 'Ti-styled Italian food'},
   {'category': 'Offerings', 'feature': 'Rice dishes'},
+  {'category': 'Offerings', 'feature': 'Hot pot'},
   {'category': 'Offerings', 'feature': 'Noodle dishes'},
   {'category': 'Offerings', 'feature': 'Cafeteria dishes(自助餐)'},
   {'category': 'Offerings', 'feature': 'Chinese breakfast foods(中式早餐)'},
@@ -72,6 +73,20 @@ const List<Map<String, String>> tags = [
   {'category': 'Payments', 'feature': '街口支付'},
   {'category': 'Payments', 'feature': '悠游付'},
 ];
+
+// Get tag chosen
+List<bool> getTagChosen({required List myTag}) {
+  List<bool> tagChosen = List.filled(tags.length, false);
+
+  if (myTag.isNotEmpty) {
+    for (int i = 0; i < tags.length; i++) {
+      if (myTag.map((e) => e['feature']).contains(tags[i]['feature'])) {
+        tagChosen[i] = true;
+      }
+    }
+  }
+  return tagChosen;
+}
 
 // Tag menu
 class TagMenu extends StatelessWidget {

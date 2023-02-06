@@ -20,7 +20,7 @@ class _SearchPageState extends State<StatefulWidget> {
     },
     {
       'name': '鍋in',
-      'address': ' 100台北市中正區汀州路三段196號',
+      'address': '100台北市中正區汀州路三段196號',
       'region': '公館',
       'coordinate': LatLng(25.012594827336873, 121.53533484156256)
     },
@@ -84,97 +84,96 @@ class _SearchPageState extends State<StatefulWidget> {
   @override
   Widget build(context) {
     return WillPopScope(
-        onWillPop: _requestPop,
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.green,
-          ),
-          resizeToAvoidBottomInset: false,
-          drawer: const MyNavigationDrawer(),
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 8),
-                // Search bar
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: TextField(
-                    onChanged: (value) => _runFilter(value),
-                    cursorColor: Colors.grey,
-                    decoration: const InputDecoration(
-                      suffixIcon: Icon(
-                        Icons.search,
-                        color: Colors.grey,
-                      ),
-                      hintText: 'Search',
-                      hintMaxLines: 2,
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                      ),
+      onWillPop: _requestPop,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.green,
+        ),
+        resizeToAvoidBottomInset: false,
+        drawer: const MyNavigationDrawer(),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 8),
+              // Search bar
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: TextField(
+                  onChanged: (value) => _runFilter(value),
+                  cursorColor: Colors.grey,
+                  decoration: const InputDecoration(
+                    suffixIcon: Icon(
+                      Icons.search,
+                      color: Colors.grey,
+                    ),
+                    hintText: 'Search',
+                    hintMaxLines: 2,
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
-                // Filtered available restaurants
-                Expanded(
-                  child: ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      itemCount: _foundRestaurant.length,
-                      itemBuilder: ((context, index) => TextButton(
-                            onPressed: () {
-                              // more response here
-                              Navigator.pop(context);
-                              Navigator.pushNamed(context, '/map',
-                                  arguments: restaurants[index]);
-                              // show restaurant name
-                              Fluttertoast.showToast(
-                                  msg: restaurants[index]['name'].toString(),
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER,
-                                  timeInSecForIosWeb: 1,
-                                  textColor: Colors.white,
-                                  fontSize: 16.0);
-                            },
-                            child: Card(
-                              key: ValueKey(restaurants[index]['name']),
-                              color: Colors.green,
-                              elevation: 12,
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 12),
-                              child: ListTile(
-                                leading: Container(
-                                  constraints:
-                                      const BoxConstraints(maxWidth: 96),
-                                  child: Text(
-                                    _foundRestaurant[index]['region'],
-                                    maxLines: 1,
-                                    style: const TextStyle(
-                                        overflow: TextOverflow.ellipsis,
-                                        fontSize: 24,
-                                        color: Colors.white),
-                                  ),
-                                ),
-                                title: Text(
-                                  _foundRestaurant[index]['name'],
+              ),
+              const SizedBox(height: 16),
+              // Filtered available restaurants
+              Expanded(
+                child: ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: _foundRestaurant.length,
+                    itemBuilder: ((context, index) => TextButton(
+                          onPressed: () {
+                            // more response here
+                            Navigator.pop(context);
+                            Navigator.pushNamed(context, '/map',
+                                arguments: restaurants[index]);
+                            // show restaurant name
+                            Fluttertoast.showToast(
+                                msg: restaurants[index]['name'].toString(),
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                timeInSecForIosWeb: 1,
+                                textColor: Colors.white,
+                                fontSize: 16.0);
+                          },
+                          child: Card(
+                            key: ValueKey(restaurants[index]['name']),
+                            color: Colors.green,
+                            elevation: 12,
+                            margin: const EdgeInsets.symmetric(horizontal: 12),
+                            child: ListTile(
+                              leading: Container(
+                                constraints: const BoxConstraints(maxWidth: 96),
+                                child: Text(
+                                  _foundRestaurant[index]['region'],
                                   maxLines: 1,
-                                  style: const TextStyle(color: Colors.white),
-                                ),
-                                subtitle: Text(
-                                  _foundRestaurant[index]['address'],
-                                  maxLines: 1,
-                                  style: const TextStyle(color: Colors.white),
+                                  style: const TextStyle(
+                                      overflow: TextOverflow.ellipsis,
+                                      fontSize: 24,
+                                      color: Colors.white),
                                 ),
                               ),
+                              title: Text(
+                                _foundRestaurant[index]['name'],
+                                maxLines: 1,
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              subtitle: Text(
+                                _foundRestaurant[index]['address'],
+                                maxLines: 1,
+                                style: const TextStyle(color: Colors.white),
+                              ),
                             ),
-                          ))),
-                ),
-              ],
-            ),
+                          ),
+                        ))),
+              ),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

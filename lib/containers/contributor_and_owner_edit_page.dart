@@ -49,7 +49,7 @@ class _ContributeAndEditPageState extends State<ContributeAndEditPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ButtonBar(
                 alignment: MainAxisAlignment.start,
@@ -103,9 +103,11 @@ class _ContributeAndEditPageState extends State<ContributeAndEditPage> {
                   color: Colors.grey,
                 ),
               ),
-              atOwnerPage
-                  ? const OwnerEditWidget()
-                  : const ContributorEditWidget(),
+              Container(
+                child: atOwnerPage
+                    ? const MyRestaurantList()
+                    : const ContributeButton(),
+              ),
             ],
           ),
         ),

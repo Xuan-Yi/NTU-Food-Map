@@ -32,7 +32,7 @@ class _MapPageState extends State<MapPage> {
     },
     {
       'name': '鍋in',
-      'address': ' 100台北市中正區汀州路三段196號',
+      'address': '100台北市中正區汀州路三段196號',
       'region': '公館',
       'coordinate': LatLng(25.012594827336873, 121.53533484156256)
     },

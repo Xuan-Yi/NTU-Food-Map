@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
@@ -8,12 +10,80 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
 import 'package:flutter/services.dart';
+import 'package:uuid/uuid.dart';
 import 'utils.dart';
 import 'tag_menu.dart';
 import 'picture_picker.dart';
 
+class ContributeButton extends StatefulWidget {
+  const ContributeButton({super.key});
+
+  @override
+  State<ContributeButton> createState() => _ContributeButtonState();
+}
+
+class _ContributeButtonState extends State<ContributeButton> {
+  bool showEdit = false;
+
+  void _toggle() => setState(() => showEdit = !showEdit);
+
+  Future<bool> _quitEdit() {
+    showDialog(
+      // Quit editing dialogue
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Quit editing'),
+        content:
+            const Text('Your data won\'t be saved. Are you sure to leave?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _toggle();
+            },
+            child: const Text('Leave', style: TextStyle(color: Colors.green)),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('Cancel', style: TextStyle(color: Colors.green)),
+          ),
+        ],
+      ),
+    );
+
+    return Future.value(false);
+  }
+
+  @override
+  Widget build(context) {
+    return showEdit
+        ? WillPopScope(
+            onWillPop: _quitEdit,
+            child: ContributorEditWidget(
+              toggle: (void v) => _toggle(),
+            ),
+          )
+        : SizedBox.fromSize(
+            size: const Size.fromHeight(36),
+            child: TextButton(
+              style: TextButton.styleFrom(backgroundColor: Colors.transparent),
+              onPressed: _toggle,
+              child: const Icon(
+                Icons.add_circle_outline_rounded,
+                color: Colors.grey,
+                size: 32,
+              ),
+            ),
+          );
+  }
+}
+
+// Contributor edit widget
 class ContributorEditWidget extends StatefulWidget {
-  const ContributorEditWidget({super.key});
+  const ContributorEditWidget({super.key, required this.toggle});
+  final ValueChanged toggle;
 
   @override
   State<ContributorEditWidget> createState() => _ContributorEditWidgetState();
@@ -22,6 +92,10 @@ class ContributorEditWidget extends StatefulWidget {
 class _ContributorEditWidgetState extends State<ContributorEditWidget> {
   // Picture picker
   List<File> imgFiles = [];
+  // Basic informations
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController addrController = TextEditingController();
+  final TextEditingController regionController = TextEditingController();
   // Tags
   List<bool> tagChosen = List.filled(tags.length, false);
   bool showTags = false;
@@ -59,6 +133,41 @@ class _ContributorEditWidgetState extends State<ContributorEditWidget> {
       }
     }
     return await location.getLocation();
+  }
+
+  // Add restaurant to database
+  Future createRestaurant(
+      {required String name,
+      required String addr,
+      required String region,
+      required GeoPoint coordinate}) async {
+    List<String> imgs = [];
+    // upload images
+    final ref = FirebaseStorage.instance.ref();
+
+    for (int i = 0; i < imgFiles.length; i++) {
+      final path = 'restaurant_images/${const Uuid().v4()}';
+      final file = imgFiles[i];
+      imgs.add(path);
+      await ref.child(path).putFile(file);
+    }
+    // create document
+    final docRestaurant = FirebaseFirestore.instance
+        .collection('restaurants')
+        .doc(); // automatically generate an ID
+    final json = {
+      'name': name,
+      'address': addr,
+      'region': region,
+      'coordinate': coordinate,
+      'dishes': [],
+      'like': 0,
+      'comments': [],
+      'tags': tags.where((e) => tagChosen[tags.indexOf(e)]).toList(),
+      'images': imgs,
+    };
+
+    await docRestaurant.set(json);
   }
 
   @override
@@ -103,10 +212,11 @@ class _ContributorEditWidgetState extends State<ContributorEditWidget> {
                                 primary: Colors.greenAccent,
                               ),
                         ),
-                        child: const TextField(
+                        child: TextField(
+                          controller: nameController,
                           cursorColor: Colors.greenAccent,
                           textInputAction: TextInputAction.next,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                               suffixIcon: Icon(Icons.restaurant),
                               border: InputBorder.none,
                               hintText: "Restaurant Name"),
@@ -128,10 +238,11 @@ class _ContributorEditWidgetState extends State<ContributorEditWidget> {
                                 primary: Colors.greenAccent,
                               ),
                         ),
-                        child: const TextField(
+                        child: TextField(
+                          controller: addrController,
                           cursorColor: Colors.greenAccent,
                           textInputAction: TextInputAction.next,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                               suffixIcon: Icon(Icons.home),
                               border: InputBorder.none,
                               hintText: "What's the address?"),
@@ -153,10 +264,11 @@ class _ContributorEditWidgetState extends State<ContributorEditWidget> {
                                 primary: Colors.greenAccent,
                               ),
                         ),
-                        child: const TextField(
+                        child: TextField(
+                          controller: regionController,
                           cursorColor: Colors.greenAccent,
                           textInputAction: TextInputAction.next,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                               suffixIcon: Icon(Icons.radar),
                               border: InputBorder.none,
                               hintText: "Region (118, 活大, 師大夜市...)"),
@@ -337,7 +449,20 @@ class _ContributorEditWidgetState extends State<ContributorEditWidget> {
                   const SizedBox(height: 30),
                   ElevatedButton.icon(
                     onPressed: () {
-                      // more response here
+                      final name = nameController.text;
+                      final addr = addrController.text;
+                      final region = regionController.text;
+
+                      createRestaurant(
+                        name: name,
+                        addr: addr,
+                        region: region,
+                        coordinate: GeoPoint(currentLocation.latitude!,
+                            currentLocation.longitude!),
+                      );
+
+                      widget.toggle(null);
+                      Utils.showSnackBar('Application is send.');
                     },
                     style: ButtonStyle(
                       backgroundColor:
