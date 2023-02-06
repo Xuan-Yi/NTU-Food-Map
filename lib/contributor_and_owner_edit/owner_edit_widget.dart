@@ -45,7 +45,13 @@ class _MyRestaurantListState extends State<MyRestaurantList> {
     super.initState();
   }
 
-  void _toggle() => setState(() => showEdit = !showEdit);
+  void _toggle() {
+    setState(() {
+      snapshotList = [];
+      showEdit = !showEdit;
+    });
+    _getRestaurants();
+  }
 
   // Quit edit
   Future<bool> _quitEdit() {

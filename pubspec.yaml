@@ -58,8 +58,6 @@ dependencies:
   path_provider: ^2.0.12
   # UUID
   uuid: ^3.0.7
-  # specify app icon
-  flutter_launcher_icons: ^0.11.0
 
 dev_dependencies:
   flutter_test:
