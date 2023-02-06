@@ -1,11 +1,11 @@
 import 'package:ntu_food_map/main.dart';
-import 'package:ntu_food_map/components/utils.dart';
+import 'package:ntu_food_map/utility_components/utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:ntu_food_map/containers/forgot_password_page.dart';
+import 'package:ntu_food_map/auth/forgot_password_page.dart';
 
 class LoginWidget extends StatefulWidget {
   final VoidCallback onClickedSignUp;

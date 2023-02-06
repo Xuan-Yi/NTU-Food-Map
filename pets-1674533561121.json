@@ -1,0 +1,26 @@
+[
+  {
+    "color": "gray",
+    "type": "totoro",
+    "size": "nano",
+    "name": "Totoro"
+  },
+  {
+    "color": "yellow",
+    "type": "rubber-duck",
+    "size": "nano",
+    "name": "Daisy"
+  },
+  {
+    "color": "gray",
+    "type": "cockatiel",
+    "size": "nano",
+    "name": "Godfeather"
+  },
+  {
+    "color": "brown",
+    "type": "cat",
+    "size": "nano",
+    "name": "Nala"
+  }
+]

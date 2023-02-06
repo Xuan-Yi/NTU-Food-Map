@@ -1,8 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart'; // Fire base Auth
 import 'package:firebase_core/firebase_core.dart'; // Firebase Core
-import 'containers/auth_page.dart';
-import 'components/utils.dart';
-import 'containers/verify_email_page.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Firebase Auth
+import 'auth/auth_page.dart';
+import 'utility_components/utils.dart';
+import 'auth/verify_email_page.dart';
 import 'package:flutter/material.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -13,6 +13,7 @@ Future main() async {
 
   runApp(
     MaterialApp(
+      debugShowCheckedModeBanner: false,
       scaffoldMessengerKey: Utils.messengerKey,
       navigatorKey: navigatorKey,
       home: const MainApp(),

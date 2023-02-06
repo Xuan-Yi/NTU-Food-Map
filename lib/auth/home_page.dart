@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'map_page.dart';
-import 'timetable_page.dart';
+import '../contributor_and_owner_edit/contributor_and_owner_edit_page.dart';
+import '../../map_view/map_page.dart';
+import '../../timetable/timetable_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,6 +17,8 @@ class _HomePageState extends State<HomePage> {
         routes: {
           '/map': (context) => const MapPage(),
           '/timetable': (context) => const TimetablePage(),
+          // '/recommend': (context) => ,
+          '/contribute': (context) => const ContributeAndEditPage(),
         },
       );
 }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ntu_food_map/main.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/foundation.dart';
@@ -5,7 +6,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:ntu_food_map/components/utils.dart';
+import 'package:ntu_food_map/utility_components/utils.dart';
 
 class SignUpWidget extends StatefulWidget {
   final VoidCallback onClickedSignIn;
@@ -140,19 +141,20 @@ class _SignUpWidgetState extends State<SignUpWidget> {
               // Register button
               RichText(
                 text: TextSpan(
-                    style: const TextStyle(color: Colors.black),
-                    text: 'Already have an acount? ',
-                    children: [
-                      TextSpan(
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = widget.onClickedSignIn,
-                        text: 'Log in',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blueAccent,
-                        ),
+                  style: const TextStyle(color: Colors.black),
+                  text: 'Already have an acount? ',
+                  children: [
+                    TextSpan(
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = widget.onClickedSignIn,
+                      text: 'Log in',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blueAccent,
                       ),
-                    ]),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -176,6 +178,17 @@ class _SignUpWidgetState extends State<SignUpWidget> {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
+      // Create a new user document
+      final user = FirebaseAuth.instance.currentUser!;
+      final docUser =
+          FirebaseFirestore.instance.collection('users').doc(user.uid);
+      final json = {
+        'email': user.email,
+        'favorites': [],
+        'my restaurants': [],
+      };
+
+      await docUser.set(json);
     } on FirebaseAuthException catch (e) {
       if (kDebugMode) {
         print(e);

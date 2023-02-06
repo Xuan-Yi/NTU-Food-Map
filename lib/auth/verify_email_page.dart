@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:ntu_food_map/containers/home_page.dart';
-import 'package:ntu_food_map/components/utils.dart';
+import 'home_page.dart';
+import '../utility_components/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

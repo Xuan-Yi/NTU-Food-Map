@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:ntu_food_map/main.dart'; // Fire base Auth
 
-class NavigationDrawer extends StatelessWidget {
-  const NavigationDrawer({Key? key}) : super(key: key);
+class MyNavigationDrawer extends StatelessWidget {
+  const MyNavigationDrawer({Key? key}) : super(key: key);
 
 // implement logOut
   Future logOut(BuildContext context) async {
@@ -29,7 +28,7 @@ class NavigationDrawer extends StatelessWidget {
   Widget buildItems(BuildContext context) => Container(
         padding: const EdgeInsets.all(24),
         child: Wrap(
-          runSpacing: 16,
+          runSpacing: 12,
           children: [
             // Map Button
             ListTile(
@@ -41,6 +40,17 @@ class NavigationDrawer extends StatelessWidget {
               },
             ),
             const Divider(color: Colors.black12),
+            // Recommended Food
+            ListTile(
+              leading: const Icon(Icons.restaurant),
+              title: const Text('Recommend'),
+              onTap: () => {
+                Navigator.pop(context),
+                Navigator.pushNamed(context, '/recommend'),
+              },
+            ),
+
+            const Divider(color: Colors.black12),
             // Timetable Button
             ListTile(
               leading: const Icon(Icons.calendar_today),
@@ -48,6 +58,16 @@ class NavigationDrawer extends StatelessWidget {
               onTap: () => {
                 Navigator.pop(context),
                 Navigator.pushNamed(context, '/timetable'),
+              },
+            ),
+            const Divider(color: Colors.black12),
+            // Contribute & Edit
+            ListTile(
+              leading: const Icon(Icons.groups),
+              title: const Text('Contribute & Edit'),
+              onTap: () => {
+                Navigator.pop(context),
+                Navigator.pushNamed(context, '/contribute'),
               },
             ),
             const Divider(color: Colors.black12),

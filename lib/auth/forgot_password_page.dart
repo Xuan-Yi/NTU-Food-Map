@@ -1,6 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/foundation.dart';
-import 'package:ntu_food_map/components/utils.dart';
+import 'package:ntu_food_map/utility_components/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -124,7 +124,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
       await FirebaseAuth.instance.sendPasswordResetEmail(
         email: emailController.text.trim(),
       );
-      Utils.showSnackBar('Email Reset Email Sent');
+      Utils.showSnackBar('Password reset email sent');
       Navigator.of(context).popUntil((route) => route.isFirst);
     } on FirebaseAuthException catch (e) {
       if (kDebugMode) {
