@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../components/navigation_drawer.dart';
-import '../components/owner_edit_widget.dart';
-import '../components/contributor_edit_widget.dart';
+import '../utility_components/navigation_drawer.dart';
+import 'owner_edit_widget.dart';
+import 'contributor_edit_widget.dart';
 
 class ContributeAndEditPage extends StatefulWidget {
   const ContributeAndEditPage({super.key});

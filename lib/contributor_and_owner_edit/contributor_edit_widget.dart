@@ -11,9 +11,9 @@ import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
 import 'package:flutter/services.dart';
 import 'package:uuid/uuid.dart';
-import 'utils.dart';
-import 'tag_menu.dart';
-import 'picture_picker.dart';
+import '../utility_components/utils.dart';
+import 'components/tag_menu.dart';
+import 'components/picture_picker.dart';
 
 class ContributeButton extends StatefulWidget {
   const ContributeButton({super.key});

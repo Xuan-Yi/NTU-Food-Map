@@ -4,11 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:ntu_food_map/components/utils.dart';
+import 'package:ntu_food_map/utility_components/utils.dart';
 import 'package:uuid/uuid.dart';
-import 'tag_menu.dart';
-import 'picture_picker.dart';
-import 'dish_menu.dart';
+import 'components/tag_menu.dart';
+import 'components/picture_picker.dart';
+import 'components/dish_menu.dart';
 
 class MyRestaurantList extends StatefulWidget {
   const MyRestaurantList({Key? key}) : super(key: key);
@@ -22,7 +22,7 @@ class _MyRestaurantListState extends State<MyRestaurantList> {
   bool showEdit = false;
   final user = FirebaseAuth.instance.currentUser!;
 
-// Grab restaurant from Firestore
+  // Grab restaurant from Firestore
   Future<void> _getRestaurants() async {
     final docUser =
         FirebaseFirestore.instance.collection('users').doc(user.uid);
@@ -93,6 +93,45 @@ class _MyRestaurantListState extends State<MyRestaurantList> {
               physics: const BouncingScrollPhysics(),
               itemCount: snapshotList.length,
               itemBuilder: (context, index) => TextButton(
+                onLongPress: () => showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Quit ownership'),
+                    content: const Text(
+                        'Do you want to quit ownership to this restaurant?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () async {
+                          // Update document (user)
+                          final user = FirebaseAuth.instance.currentUser!;
+                          final docUser = FirebaseFirestore.instance
+                              .collection('users')
+                              .doc(user.uid);
+                          final snapshot = await docUser.get();
+                          List<String> myRestaurants = List<String>.from(
+                              snapshot.data()!['my restaurants']);
+                          myRestaurants
+                              .removeWhere((e) => e == snapshotList[index].id);
+
+                          docUser.update({
+                            'my restaurants': myRestaurants.toSet().toList()
+                          }); // remove duplicates
+                          setState(() {
+                            snapshotList.remove(snapshotList[index]);
+                          });
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Yes',
+                            style: TextStyle(color: Colors.green)),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Cancel',
+                            style: TextStyle(color: Colors.green)),
+                      ),
+                    ],
+                  ),
+                ),
                 onPressed: () {
                   setState(
                       () => currentRestaurantSnapshot = snapshotList[index]);

@@ -49,16 +49,7 @@ class MyNavigationDrawer extends StatelessWidget {
                 Navigator.pushNamed(context, '/recommend'),
               },
             ),
-            const Divider(color: Colors.black12),
-            // Favorites
-            ListTile(
-              leading: const Icon(Icons.thumb_up_alt),
-              title: const Text('My Favorites'),
-              onTap: () => {
-                Navigator.pop(context),
-                Navigator.pushNamed(context, '/favorite'),
-              },
-            ),
+
             const Divider(color: Colors.black12),
             // Timetable Button
             ListTile(

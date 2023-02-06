@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
@@ -5,8 +6,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:location/location.dart';
-import '../components/navigation_drawer.dart';
-import '../containers/search_page.dart';
+import '../utility_components/navigation_drawer.dart';
+import '../map_view/search_page.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -23,37 +24,28 @@ class _MapPageState extends State<MapPage> {
   bool _centerIsCurrentLocation = false;
   bool _centerIsNTU = true;
 
-  List<Map<String, dynamic>> restaurants = [
-    {
-      'name': '食香園素食',
-      'address': '06台北市大安區羅斯福路四段1號',
-      'region': '活大',
-      'coordinate': LatLng(25.01828119432962, 121.54034891272644)
-    },
-    {
-      'name': '鍋in',
-      'address': '100台北市中正區汀州路三段196號',
-      'region': '公館',
-      'coordinate': LatLng(25.012594827336873, 121.53533484156256)
-    },
-    {
-      'name': '梧貳WUERFOODS(歐姆蛋包飯專賣店)',
-      'address': '臺北市大安區和平東路二段311巷7號',
-      'region': '118巷',
-      'coordinate': LatLng(25.025340524746174, 121.54519113970983)
-    },
-    {
-      'name': '韓庭州韓國料理',
-      'address': '溫州街87號',
-      'region': '溫州街',
-      'coordinate': LatLng(25.01937031445742, 121.53287562436525)
-    },
-  ];
+  List<Map<String, dynamic>> restaurants = List<Map<String, dynamic>>.from([]);
+
+  // Grab restaurant from Firestore
+  Future<void> _getRestaurants() async {
+    final ref = FirebaseFirestore.instance.collection('restaurants');
+    final snapshot = await ref.get();
+    List<Map<String, dynamic>> restaurantList =
+        snapshot.docs.map((e) => Map<String, dynamic>.from(e.data())).toList();
+
+    for (int i = 0; i < restaurantList.length; i++) {
+      restaurantList[i]['coordinate'] = LatLng(
+          restaurantList[i]['coordinate'].latitude,
+          restaurantList[i]['coordinate'].longitude);
+    }
+    setState(() => restaurants = restaurantList);
+  }
 
   @override
   void initState() {
-    super.initState();
+    _getRestaurants();
     _mapController = MapController();
+    super.initState();
   }
 
   // Get current location

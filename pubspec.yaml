@@ -44,6 +44,8 @@ dependencies:
   firebase_auth: ^4.2.5
   # Firebase Database
   cloud_firestore: ^4.3.1
+  # Firebase Storage
+  firebase_storage: ^11.0.10
   # Map & GPS
   flutter_map: ^3.1.0
   location: ^4.4.0
@@ -51,11 +53,13 @@ dependencies:
   latlong2: ^0.8.1
   # Toast
   fluttertoast: ^8.1.2
+  # Picture picker
   image_picker: ^0.8.6+1
   path_provider: ^2.0.12
   # UUID
   uuid: ^3.0.7
-  firebase_storage: ^11.0.10
+  # specify app icon
+  flutter_launcher_icons: ^0.11.0
 
 dev_dependencies:
   flutter_test:
@@ -67,12 +71,6 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
-
-# favicon
-flutter_icons:
-  android: true
-  ios: true
-  image_path: "assets/favicon.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
-import 'utils.dart';
+import '../../utility_components/utils.dart';
 
 // Dish menu
 class DishMenu extends StatefulWidget {
