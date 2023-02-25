@@ -1,5 +1,7 @@
 # NTU-Food-Map
 
+* released [apk](https://github.com/Xuan-Yi/NTU-Food-Map/releases)
+
 ## Firebase
 
 > For convenience in developing, `android/app/google-services.json` is not pushed to remote.
